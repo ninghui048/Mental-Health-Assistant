@@ -41,3 +41,10 @@ export function changeArticleStatus(id: string, data: any) {
 export function deleteArticle(id: string) {
     return service.delete(`/knowledge/article/${id}`);
 }
+
+export function getConsultationPage(params: any) {
+    return service.get("/psychological-chat/sessions", { params });
+}
+export function getSessionDetail(sessionId: any) {
+    return service.get(`/psychological-chat/sessions/${sessionId}/messages`);
+}
