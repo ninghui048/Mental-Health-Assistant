@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="title">
-            <div class="back-home">
+            <div class="back-home" @click="goHome">
                 <el-icon><Back /></el-icon>
                 <span>返回首页</span>
             </div>
@@ -94,6 +94,10 @@ const submitForm = async (formEl) => {
         }
     });
 };
+// 返回前台首页
+const goHome = () => {
+    router.push("/");
+};
 </script>
 <style scoped>
 .container {
@@ -101,6 +105,13 @@ const submitForm = async (formEl) => {
     .title {
         .back-home {
             margin-bottom: 60px;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            color: #6b7280;
+            &:hover {
+                color: #4a9c8c;
+            }
         }
         .title-text {
             text-align: center;

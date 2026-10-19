@@ -18,8 +18,8 @@
                 </div>
             </div>
             <el-menu-item
-                @click="selectMenu"
-                v-for="item in router.options.routes[0].children"
+                @click="selectMenu(item)"
+                v-for="item in menuRoutes"
                 :key="item.path"
                 :index="item.path"
             >
@@ -51,10 +51,14 @@ const isCollapse = computed(() => {
     return adminStore.isCollapsed;
 });
 
-const selectMenu = (key: any) => {
-    // console.log(key)
-    const currentRoute = router.options.routes[0];
-    router.push(`${currentRoute.path}/${key.index}`);
+// 后台菜单来自 /back 这条路由的 children。
+// 不要用 routes[0]:routes 是 [...前台路由, ...后台路由],第 0 条是前台路由,没有 children。
+const backendRoute = router.options.routes.find((item) => item.path === "/back");
+const menuRoutes = backendRoute?.children ?? [];
+
+const selectMenu = (menuItem: any) => {
+    // 子路由的 path 是相对路径(如 dashboard),拼上 /back 才是完整地址
+    router.push(`${backendRoute?.path ?? "/back"}/${menuItem.path}`);
 };
 </script>
 <style lang="scss" scoped>

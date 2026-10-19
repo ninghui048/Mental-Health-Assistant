@@ -78,11 +78,25 @@ const robotUrl = new URL("@/assets/images/robot-fill.png", import.meta.url)
     }
     .right-section {
         display: flex;
-        justify-content: center;
-        align-items: center;
         flex: 1;
         height: 100vh;
+        overflow-y: auto;
+        padding: 40px 20px;
+        box-sizing: border-box;
         background-color: #fff;
+        // 用 margin:auto 居中:内容比容器高时自动边距失效,顶部不会被裁掉,可以正常滚动
+        > * {
+            margin: auto;
+        }
+    }
+}
+
+// 窄屏隐藏左侧宣传区,把空间留给表单
+@media (max-width: 768px) {
+    .auth-layout {
+        .left-section {
+            display: none;
+        }
     }
 }
 </style>

@@ -22,6 +22,15 @@ service.interceptors.request.use(
         return Promise.reject(error);
     },
 );
+// 登录过期统一处理:清空本地登录信息并跳回登录页
+const handleAuthExpired = (msg?: string) => {
+    // 已在登录页时不重复提示和跳转,避免死循环
+    if (window.location.pathname === "/auth/login") return;
+    ElMessage.error(msg || "登录过期，请重新登录");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
+    window.location.href = "/auth/login";
+};
 // 响应拦截器
 service.interceptors.response.use(
     (response) => {
@@ -30,25 +39,28 @@ service.interceptors.response.use(
         // 处理业务状态码
         if (data.code === "200") {
             return data.data;
-        } else {
-            if (data.code === "-1") {
-                if (!config.url?.includes("/login")) {
-                    ElMessage.error(data.msg || "登录过期，请重新登录");
-                    // 清除登录信息
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("userInfo");
-                    window.location.href = "/auth/login";
-                } else {
-                    ElMessage.error(data.msg || "登录过期，请重新登录");
-                    return Promise.reject("网络请求失败....");
-                }
+        }
+        if (String(data.code) === "-1") {
+            if (!config.url?.includes("/login")) {
+                handleAuthExpired(data.msg);
+            } else {
+                ElMessage.error(data.msg || "登录过期，请重新登录");
             }
+            // 中断调用链,不要把 response 交给调用方的 then
+            return Promise.reject(data);
         }
 
         return response;
     },
     (error) => {
-        // 对响应错误做点什么
+        // 后端安全过滤器对未登录/过期 token 直接返回 HTTP 401/403(空 body),
+        // 走不到上面的成功回调,必须在这里处理
+        const status = error.response?.status;
+        const url: string = error.config?.url || "";
+        if ((status === 401 || status === 403) && !url.includes("/login")) {
+            handleAuthExpired();
+        }
+        // 对请求错误做些什么
         return Promise.reject(error);
     },
 );
