@@ -61,7 +61,7 @@
 </template>
 <script setup>
 import { ref, reactive } from "vue";
-import { register } from "@/api/fronted";
+import { register } from "@/api/frontend";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 const router = useRouter();

@@ -26,6 +26,10 @@ const frontendRoutes = [
                 path: "frontendknowledge",
                 component: () => import("@/views/FrontendKnowledge.vue"),
             },
+            {
+                path: "frontendknowledge/article/:id",
+                component: () => import("@/views/articleDetail.vue"),
+            },
         ],
     },
 ];

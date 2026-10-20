@@ -65,7 +65,9 @@ const handleLogout = () => {
 </script>
 <style lang="scss" scoped>
 .frontend-layout {
-    background-color: #fff;
+    // 与咨询页纸感底色统一（Consultation.vue 的 $paper）
+    background-color: #f5f3ee;
+    min-height: 100vh;
 
     .navbar-container {
         max-width: 1200px;
